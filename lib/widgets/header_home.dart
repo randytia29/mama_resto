@@ -17,21 +17,23 @@ class HeaderHome extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'MaMa Resto',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'MaMa Resto',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            Text(
-              'Choose your Resto for your hunger',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
+              Text(
+                'Choose your Resto for your hunger',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
         ),
         8.0.spaceX,
         BlocBuilder<FavoriteCubit, FavoriteState>(
