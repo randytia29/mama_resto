@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:mama_resto/features/restaurant/cubit/favorite_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/shared_pref.dart';
@@ -12,8 +13,8 @@ Future<void> init() async {
   //! Features
   // Bloc
 
-  // Repository
-  // sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(dio: sl()));
+  // Restaurant
+  sl.registerLazySingleton(() => FavoriteCubit());
 
   //! External
   sl.registerLazySingleton(
