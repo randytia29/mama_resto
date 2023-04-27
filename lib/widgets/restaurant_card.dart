@@ -17,77 +17,82 @@ class RestaurantCard extends StatelessWidget {
     return InkWell(
       onTap: () =>
           context.toScreen(DetailScreen.routeName, arguments: restaurant),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 150,
-            height: 100,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Hero(
-                tag: restaurant.pictureId ?? '-',
-                child: Image.network(
-                  restaurant.pictureId ?? '',
-                  fit: BoxFit.cover,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 150,
+                height: 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Hero(
+                    tag: restaurant.pictureId ?? '-',
+                    child: Image.network(
+                      restaurant.pictureId ?? '',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          16.0.spaceX,
-          Expanded(
-            child: SizedBox(
-              height: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    restaurant.name ?? '-',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Row(
+              16.0.spaceX,
+              Expanded(
+                child: SizedBox(
+                  height: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Icon(
-                        Icons.location_pin,
-                        color: ColorManager.grey,
+                      Text(
+                        restaurant.name ?? '-',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Expanded(
-                        child: Text(
-                          restaurant.city ?? '-',
-                          style: TextStyle(
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_pin,
                             color: ColorManager.grey,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          Expanded(
+                            child: Text(
+                              restaurant.city ?? '-',
+                              style: TextStyle(
+                                color: ColorManager.grey,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: ColorManager.grey,
-                      ),
-                      Expanded(
-                        child: Text(
-                          restaurant.rating.toString(),
-                          style: TextStyle(
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.star,
                             color: ColorManager.grey,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          Expanded(
+                            child: Text(
+                              restaurant.rating.toString(),
+                              style: TextStyle(
+                                color: ColorManager.grey,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
+                        ],
                       )
                     ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

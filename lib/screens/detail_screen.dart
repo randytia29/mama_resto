@@ -52,39 +52,69 @@ class DetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                  8.0.spaceY,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: ColorManager.grey,
+                      ),
+                      Expanded(
+                        child: Text(
+                          restaurant.rating.toString(),
+                          style: TextStyle(
+                            color: ColorManager.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ],
+                  ),
                   24.0.spaceY,
                   Text(
                     restaurant.description ?? '-',
                   ),
                   24.0.spaceY,
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
+                      Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Food :'),
+                            const Text(
+                              'Food :',
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
                             ...restaurant.menu!.foods!
-                                .map((e) => Text(
-                                      '- ${e.name}',
-                                      overflow: TextOverflow.ellipsis,
-                                    ))
+                                .map(
+                                  (e) => Text(
+                                    '- ${e.name}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
                                 .toList()
                           ],
                         ),
                       ),
-                      Flexible(
+                      8.0.spaceX,
+                      Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Food :'),
-                            ...restaurant.menu!.foods!
-                                .map((e) => Text(
-                                      '- ${e.name} sfhks shksh shfksh',
-                                      overflow: TextOverflow.ellipsis,
-                                    ))
+                            const Text(
+                              'Drink :',
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            ...restaurant.menu!.drinks!
+                                .map(
+                                  (e) => Text(
+                                    '- ${e.name}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
                                 .toList()
                           ],
                         ),
