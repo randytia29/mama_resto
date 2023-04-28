@@ -171,6 +171,8 @@ class _DetailScreenState extends State<DetailScreen> {
                           24.0.spaceY,
                           Text(
                             restaurant.description ?? '-',
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           24.0.spaceY,
                           MealsWrap(
@@ -186,6 +188,47 @@ class _DetailScreenState extends State<DetailScreen> {
                           MealsWrap(
                             title: 'Drink :',
                             categories: restaurant.menus!.drinks ?? [],
+                          ),
+                          24.0.spaceY,
+                          SizedBox(
+                            height: 200,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const ScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: restaurant.customerReviews?.length,
+                              itemBuilder: (context, index) {
+                                final review =
+                                    restaurant.customerReviews?[index];
+
+                                return Card(
+                                  child: Container(
+                                    width: 200,
+                                    height: 200,
+                                    margin: const EdgeInsets.all(8),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              review?.name ?? '-',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Text(review?.date ?? '-')
+                                          ],
+                                        ),
+                                        Text(review?.review ?? '-')
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                           24.0.spaceY
                         ],
