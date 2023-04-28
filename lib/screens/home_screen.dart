@@ -52,33 +52,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const HeaderHome(),
-                  24.0.spaceY,
-                  BlocBuilder<RestaurantCubit, RestaurantState>(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 24, right: 24, left: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const HeaderHome(),
+                24.0.spaceY,
+                Expanded(
+                  child: BlocBuilder<RestaurantCubit, RestaurantState>(
                     builder: (context, restaurantState) {
                       if (restaurantState is RestaurantLoading) {
-                        return const SizedBox(
-                          height: 80,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
                       }
 
                       if (restaurantState is RestaurantFailed) {
                         final message = restaurantState.message;
 
-                        return SizedBox(
-                          height: 80,
-                          child: Center(
-                            child: Text(message),
-                          ),
+                        return Center(
+                          child: Text(message),
                         );
                       }
 
@@ -107,26 +101,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            24.0.spaceY,
+                            16.0.spaceY,
                             BlocBuilder<SearchRestaurantCubit,
                                 SearchRestaurantState>(
                               builder: (context, searchRestaurantState) {
                                 final restos =
                                     searchRestaurantState.restaurants;
 
-                                return ListView.separated(
-                                  itemCount: restos.length,
-                                  shrinkWrap: true,
-                                  physics: const ScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final resto = restos[index];
+                                return Expanded(
+                                  child: ListView.separated(
+                                    itemCount: restos.length,
+                                    shrinkWrap: true,
+                                    physics: const ScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final resto = restos[index];
 
-                                    return RestaurantCard(restaurant: resto);
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return 16.0.spaceY;
-                                  },
+                                      return RestaurantCard(restaurant: resto);
+                                    },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return 16.0.spaceY;
+                                    },
+                                  ),
                                 );
                               },
                             ),
@@ -136,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Container();
                     },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
