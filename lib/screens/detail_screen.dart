@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/features/restaurant/cubit/restaurant_detail_cubit.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/category.dart';
 import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
 import 'package:mama_resto/theme_manager/value_manager.dart';
@@ -104,7 +103,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                         8.0.spaceX,
                                         Expanded(
                                           child: Text(
-                                            restaurant.city ?? '-',
+                                            '${restaurant.address}, ${restaurant.city}',
                                             style: TextStyle(
                                               color: ColorManager.grey,
                                             ),
@@ -172,6 +171,11 @@ class _DetailScreenState extends State<DetailScreen> {
                           24.0.spaceY,
                           Text(
                             restaurant.description ?? '-',
+                          ),
+                          24.0.spaceY,
+                          MealsWrap(
+                            title: 'Kategori :',
+                            categories: restaurant.categories ?? [],
                           ),
                           24.0.spaceY,
                           MealsWrap(
