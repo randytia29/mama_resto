@@ -1,6 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mama_resto/features/restaurant/cubit/favorite_cubit.dart';
+import 'package:mama_resto/features/restaurant/cubit/restaurant_cubit.dart';
 import 'package:mama_resto/features/restaurant/cubit/search_restaurant_cubit.dart';
+import 'package:mama_resto/features/restaurant/data/repositories/restaurant_repository_impl.dart';
+import 'package:mama_resto/features/restaurant/domain/repositories/restaurant_repository.dart';
 
 final sl = GetIt.instance;
 
@@ -11,4 +15,12 @@ Future<void> init() async {
   // Restaurant
   sl.registerLazySingleton(() => FavoriteCubit());
   sl.registerFactory(() => SearchRestaurantCubit());
+  sl.registerFactory(() => RestaurantCubit(restaurantRepository: sl()));
+
+  // Repository
+  sl.registerLazySingleton<RestaurantRepository>(
+      () => RestaurantRepositoryImpl(dio: sl()));
+
+  //! External
+  sl.registerLazySingleton(() => Dio());
 }

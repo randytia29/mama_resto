@@ -123,52 +123,52 @@ class DetailScreen extends StatelessWidget {
                     restaurant.description ?? '-',
                   ),
                   24.0.spaceY,
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Food :',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            ...restaurant.menu!.foods!
-                                .map(
-                                  (e) => Text(
-                                    '- ${e.name}',
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )
-                                .toList()
-                          ],
-                        ),
-                      ),
-                      8.0.spaceX,
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Drink :',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            ...restaurant.menu!.drinks!
-                                .map(
-                                  (e) => Text(
-                                    '- ${e.name}',
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )
-                                .toList()
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Expanded(
+                  //       flex: 1,
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           const Text(
+                  //             'Food :',
+                  //             style: TextStyle(fontWeight: FontWeight.w500),
+                  //           ),
+                  //           ...restaurant.menu!.foods!
+                  //               .map(
+                  //                 (e) => Text(
+                  //                   '- ${e.name}',
+                  //                   overflow: TextOverflow.ellipsis,
+                  //                 ),
+                  //               )
+                  //               .toList()
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     8.0.spaceX,
+                  //     Expanded(
+                  //       flex: 1,
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           const Text(
+                  //             'Drink :',
+                  //             style: TextStyle(fontWeight: FontWeight.w500),
+                  //           ),
+                  //           ...restaurant.menu!.drinks!
+                  //               .map(
+                  //                 (e) => Text(
+                  //                   '- ${e.name}',
+                  //                   overflow: TextOverflow.ellipsis,
+                  //                 ),
+                  //               )
+                  //               .toList()
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   24.0.spaceY
                 ],
               ),

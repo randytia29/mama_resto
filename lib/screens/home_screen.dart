@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mama_resto/features/restaurant/cubit/restaurant_cubit.dart';
 import 'package:mama_resto/features/restaurant/cubit/search_restaurant_cubit.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
 import 'package:mama_resto/sl.dart';
-import 'package:mama_resto/theme_manager/asset_manager.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
 import 'package:mama_resto/widgets/restaurant_card.dart';
 
@@ -24,26 +21,36 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController _searchController;
   late SearchRestaurantCubit _searchRestaurantCubit;
+  late RestaurantCubit _restaurantCubit;
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
     _searchRestaurantCubit = sl<SearchRestaurantCubit>();
+    _restaurantCubit = sl<RestaurantCubit>();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     _searchRestaurantCubit.close();
+    _restaurantCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-        create: (context) => _searchRestaurantCubit,
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => _searchRestaurantCubit,
+          ),
+          BlocProvider(
+            create: (context) => _restaurantCubit..fetchRestaurant(),
+          ),
+        ],
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -53,71 +60,80 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const HeaderHome(),
                   24.0.spaceY,
-                  FutureBuilder(
-                    future: DefaultAssetBundle.of(context)
-                        .loadString(AssetManager.localRestaurantJson),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
+                  BlocBuilder<RestaurantCubit, RestaurantState>(
+                    builder: (context, restaurantState) {
+                      if (restaurantState is RestaurantLoading) {
+                        return const SizedBox(
+                          height: 80,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
                       }
 
-                      final data = snapshot.data;
+                      if (restaurantState is RestaurantFailed) {
+                        final message = restaurantState.message;
 
-                      if (data == null) {
-                        return Text(snapshot.error.toString());
+                        return SizedBox(
+                          height: 80,
+                          child: Center(
+                            child: Text(message),
+                          ),
+                        );
                       }
 
-                      final jsonData = jsonDecode(data);
+                      if (restaurantState is RestaurantLoaded) {
+                        final restaurants = restaurantState.restaurants;
 
-                      final restaurants = List.from(jsonData['restaurants'])
-                          .map((e) => Restaurant.fromJson(e))
-                          .toList();
+                        _searchRestaurantCubit.getRestaurantInit(restaurants);
 
-                      _searchRestaurantCubit.getRestaurantInit(restaurants);
-
-                      return Column(
-                        children: [
-                          TextFormField(
-                            controller: _searchController,
-                            onChanged: (value) => _searchRestaurantCubit
-                                .startSearchRestaurant(restaurants, value),
-                            decoration: InputDecoration(
-                              hintText: 'Search',
-                              hintStyle: TextStyle(color: ColorManager.grey),
-                              fillColor: ColorManager.white,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: ColorManager.grey),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
+                        return Column(
+                          children: [
+                            TextFormField(
+                              controller: _searchController,
+                              onChanged: (value) => _searchRestaurantCubit
+                                  .startSearchRestaurant(restaurants, value),
+                              decoration: InputDecoration(
+                                hintText: 'Search',
+                                hintStyle: TextStyle(color: ColorManager.grey),
+                                fillColor: ColorManager.white,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: ColorManager.grey),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          24.0.spaceY,
-                          BlocBuilder<SearchRestaurantCubit,
-                              SearchRestaurantState>(
-                            builder: (context, searchRestaurantState) {
-                              final restos = searchRestaurantState.restaurants;
+                            24.0.spaceY,
+                            BlocBuilder<SearchRestaurantCubit,
+                                SearchRestaurantState>(
+                              builder: (context, searchRestaurantState) {
+                                final restos =
+                                    searchRestaurantState.restaurants;
 
-                              return ListView.separated(
-                                itemCount: restos.length,
-                                shrinkWrap: true,
-                                physics: const ScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  final resto = restos[index];
+                                return ListView.separated(
+                                  itemCount: restos.length,
+                                  shrinkWrap: true,
+                                  physics: const ScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final resto = restos[index];
 
-                                  return RestaurantCard(restaurant: resto);
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return 16.0.spaceY;
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      );
+                                    return RestaurantCard(restaurant: resto);
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return 16.0.spaceY;
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      }
+                      return Container();
                     },
                   ),
                 ],

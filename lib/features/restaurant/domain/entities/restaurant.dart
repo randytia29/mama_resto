@@ -1,8 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-import 'menu.dart';
-
 class Restaurant extends Equatable {
+  final String? id;
+  final String? name;
+  final String? description;
+  final String? pictureId;
+  final String? city;
+  final double? rating;
+
   const Restaurant({
     this.id,
     this.name,
@@ -10,16 +15,7 @@ class Restaurant extends Equatable {
     this.pictureId,
     this.city,
     this.rating,
-    this.menu,
   });
-
-  final String? id;
-  final String? name;
-  final String? description;
-  final String? pictureId;
-  final String? city;
-  final double? rating;
-  final Menu? menu;
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
         id: json["id"],
@@ -28,7 +24,6 @@ class Restaurant extends Equatable {
         pictureId: json["pictureId"],
         city: json["city"],
         rating: json["rating"]?.toDouble(),
-        menu: json["menus"] == null ? null : Menu.fromJson(json["menus"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,10 +33,8 @@ class Restaurant extends Equatable {
         "pictureId": pictureId,
         "city": city,
         "rating": rating,
-        "menus": menu?.toJson(),
       };
 
   @override
-  List<Object?> get props =>
-      [id, name, description, pictureId, city, rating, menu];
+  List<Object?> get props => [id, name, description, pictureId, city, rating];
 }

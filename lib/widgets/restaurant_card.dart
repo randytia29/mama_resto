@@ -4,6 +4,7 @@ import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
 import 'package:mama_resto/screens/detail_screen.dart';
 import 'package:mama_resto/theme_manager/navigation_manager.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
+import 'package:mama_resto/theme_manager/value_manager.dart';
 
 import '../theme_manager/color_manager.dart';
 
@@ -30,8 +31,11 @@ class RestaurantCard extends StatelessWidget {
                   child: Hero(
                     tag: restaurant.pictureId ?? '-',
                     child: Image.network(
-                      restaurant.pictureId ?? '',
+                      ValueManager.smallRes(restaurant.pictureId ?? ''),
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: Text(error.toString()),
+                      ),
                     ),
                   ),
                 ),
