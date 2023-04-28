@@ -17,7 +17,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () =>
-          context.toScreen(DetailScreen.routeName, arguments: restaurant),
+          context.toScreen(DetailScreen.routeName, arguments: restaurant.id),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

@@ -34,4 +34,26 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
       return Left(e.message ?? ValueManager.noInternet);
     }
   }
+
+  @override
+  Future<Either<String, Restaurant>> getDetailRestaurant(String id) async {
+    try {
+      final response = await dio.get('${ValueManager.baseUrl}/detail/$id');
+
+      if (response.statusCode != null && response.statusCode == 200) {
+        if (!response.data['error']) {
+          final restaurant = Restaurant.fromJson(response.data['restaurant']);
+
+          return Right(restaurant);
+        } else {
+          return Left(response.data['message']);
+        }
+      } else {
+        return Left(response.statusMessage ?? '-');
+      }
+    } on DioError catch (e) {
+      log(e.message.toString());
+      return Left(e.message ?? ValueManager.noInternet);
+    }
+  }
 }
