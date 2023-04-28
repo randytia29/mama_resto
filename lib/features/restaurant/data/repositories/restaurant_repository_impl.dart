@@ -12,17 +12,15 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   RestaurantRepositoryImpl({required this.dio});
 
   @override
-  Future<Either<String, List<Restaurant>>> getListRestaurant() async {
+  Future<Either<String, Restaurant>> getDetailRestaurant(String id) async {
     try {
-      final response = await dio.get('${ValueManager.baseUrl}/list');
+      final response = await dio.get('${ValueManager.baseUrl}/detail/$id');
 
       if (response.statusCode != null && response.statusCode == 200) {
         if (!response.data['error']) {
-          final restaurants = List.from(response.data['restaurants'])
-              .map((e) => Restaurant.fromJson(e))
-              .toList();
+          final restaurant = Restaurant.fromJson(response.data['restaurant']);
 
-          return Right(restaurants);
+          return Right(restaurant);
         } else {
           return Left(response.data['message']);
         }
@@ -36,17 +34,21 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   }
 
   @override
-  Future<Either<String, Restaurant>> getDetailRestaurant(String id) async {
+  Future<Either<String, List<Restaurant>>> getListRestaurant(
+      String query) async {
     try {
-      final response = await dio.get('${ValueManager.baseUrl}/detail/$id');
+      final response = await dio
+          .get('${ValueManager.baseUrl}/search', queryParameters: {'q': query});
 
       if (response.statusCode != null && response.statusCode == 200) {
         if (!response.data['error']) {
-          final restaurant = Restaurant.fromJson(response.data['restaurant']);
+          final restaurants = List.from(response.data['restaurants'])
+              .map((e) => Restaurant.fromJson(e))
+              .toList();
 
-          return Right(restaurant);
+          return Right(restaurants);
         } else {
-          return Left(response.data['message']);
+          return Left(response.statusMessage ?? '-');
         }
       } else {
         return Left(response.statusMessage ?? '-');

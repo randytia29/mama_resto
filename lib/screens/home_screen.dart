@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/features/restaurant/cubit/restaurant_cubit.dart';
-import 'package:mama_resto/features/restaurant/cubit/search_restaurant_cubit.dart';
 import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
 import 'package:mama_resto/widgets/restaurant_card.dart';
@@ -20,21 +19,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController _searchController;
-  late SearchRestaurantCubit _searchRestaurantCubit;
   late RestaurantCubit _restaurantCubit;
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    _searchRestaurantCubit = sl<SearchRestaurantCubit>();
     _restaurantCubit = sl<RestaurantCubit>();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _searchRestaurantCubit.close();
     _restaurantCubit.close();
     super.dispose();
   }
@@ -44,9 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => _searchRestaurantCubit,
-          ),
           BlocProvider(
             create: (context) => _restaurantCubit..fetchRestaurant(),
           ),
@@ -59,6 +52,27 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const HeaderHome(),
                 24.0.spaceY,
+                TextFormField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () => _restaurantCubit.fetchRestaurant(
+                          query: _searchController.text),
+                      icon: const Icon(Icons.search),
+                    ),
+                    hintText: 'Search',
+                    hintStyle: TextStyle(color: ColorManager.grey),
+                    fillColor: ColorManager.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: ColorManager.grey),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                16.0.spaceY,
                 Expanded(
                   child: BlocBuilder<RestaurantCubit, RestaurantState>(
                     builder: (context, restaurantState) {
@@ -79,54 +93,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (restaurantState is RestaurantLoaded) {
                         final restaurants = restaurantState.restaurants;
 
-                        _searchRestaurantCubit.getRestaurantInit(restaurants);
+                        if (restaurants.isEmpty) {
+                          return const Center(
+                            child: Text('Tidak ada data'),
+                          );
+                        }
 
-                        return Column(
-                          children: [
-                            TextFormField(
-                              controller: _searchController,
-                              onChanged: (value) => _searchRestaurantCubit
-                                  .startSearchRestaurant(restaurants, value),
-                              decoration: InputDecoration(
-                                hintText: 'Search',
-                                hintStyle: TextStyle(color: ColorManager.grey),
-                                fillColor: ColorManager.white,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: ColorManager.grey),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            16.0.spaceY,
-                            BlocBuilder<SearchRestaurantCubit,
-                                SearchRestaurantState>(
-                              builder: (context, searchRestaurantState) {
-                                final restos =
-                                    searchRestaurantState.restaurants;
+                        return ListView.separated(
+                          itemCount: restaurants.length,
+                          shrinkWrap: true,
+                          physics: const ScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final restaurant = restaurants[index];
 
-                                return Expanded(
-                                  child: ListView.separated(
-                                    itemCount: restos.length,
-                                    shrinkWrap: true,
-                                    physics: const ScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      final resto = restos[index];
-
-                                      return RestaurantCard(restaurant: resto);
-                                    },
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return 16.0.spaceY;
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
+                            return RestaurantCard(restaurant: restaurant);
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              16.0.spaceY,
                         );
                       }
                       return Container();

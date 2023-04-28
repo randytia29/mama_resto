@@ -13,10 +13,10 @@ class RestaurantCubit extends Cubit<RestaurantState> {
   })  : repository = restaurantRepository,
         super(RestaurantInitial());
 
-  void fetchRestaurant() async {
+  void fetchRestaurant({String? query}) async {
     emit(RestaurantLoading());
 
-    final result = await repository.getListRestaurant();
+    final result = await repository.getListRestaurant(query ?? '');
 
     result.fold((l) => emit(RestaurantFailed(message: l)),
         (r) => emit(RestaurantLoaded(restaurants: r)));
