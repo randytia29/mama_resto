@@ -22,6 +22,12 @@ class FavoriteScreen extends StatelessWidget {
           builder: (context, favoriteState) {
             final restaurants = favoriteState.restaurants;
 
+            if (restaurants.isEmpty) {
+              return const Center(
+                child: Text('Tidak ada restoran favorit'),
+              );
+            }
+
             return ListView.separated(
               itemCount: restaurants.length,
               shrinkWrap: true,

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/features/restaurant/cubit/restaurant_detail_cubit.dart';
+import 'package:mama_resto/features/restaurant/domain/entities/category.dart';
 import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
 import 'package:mama_resto/theme_manager/value_manager.dart';
 
 import '../features/restaurant/cubit/favorite_cubit.dart';
 import '../theme_manager/color_manager.dart';
+import '../widgets/meals_wrap.dart';
 
 class DetailScreen extends StatefulWidget {
   static const String routeName = '/detail';
@@ -172,52 +174,15 @@ class _DetailScreenState extends State<DetailScreen> {
                             restaurant.description ?? '-',
                           ),
                           24.0.spaceY,
-                          // Row(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-                          //     Expanded(
-                          //       flex: 1,
-                          //       child: Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: [
-                          //           const Text(
-                          //             'Food :',
-                          //             style: TextStyle(fontWeight: FontWeight.w500),
-                          //           ),
-                          //           ...restaurant.menu!.foods!
-                          //               .map(
-                          //                 (e) => Text(
-                          //                   '- ${e.name}',
-                          //                   overflow: TextOverflow.ellipsis,
-                          //                 ),
-                          //               )
-                          //               .toList()
-                          //         ],
-                          //       ),
-                          //     ),
-                          //     8.0.spaceX,
-                          //     Expanded(
-                          //       flex: 1,
-                          //       child: Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: [
-                          //           const Text(
-                          //             'Drink :',
-                          //             style: TextStyle(fontWeight: FontWeight.w500),
-                          //           ),
-                          //           ...restaurant.menu!.drinks!
-                          //               .map(
-                          //                 (e) => Text(
-                          //                   '- ${e.name}',
-                          //                   overflow: TextOverflow.ellipsis,
-                          //                 ),
-                          //               )
-                          //               .toList()
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
+                          MealsWrap(
+                            title: 'Food :',
+                            categories: restaurant.menus!.foods ?? [],
+                          ),
+                          24.0.spaceY,
+                          MealsWrap(
+                            title: 'Drink :',
+                            categories: restaurant.menus!.drinks ?? [],
+                          ),
                           24.0.spaceY
                         ],
                       ),
