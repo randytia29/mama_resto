@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:mama_resto/features/restaurant/domain/entities/customer_review.dart';
 import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mama_resto/features/restaurant/domain/repositories/restaurant_repository.dart';
@@ -47,6 +48,33 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
               .toList();
 
           return Right(restaurants);
+        } else {
+          return Left(response.statusMessage ?? '-');
+        }
+      } else {
+        return Left(response.statusMessage ?? '-');
+      }
+    } on DioError catch (e) {
+      log(e.message.toString());
+      return Left(e.message ?? ValueManager.noInternet);
+    }
+  }
+
+  @override
+  Future<Either<String, List<CustomerReview>>> addReview(
+      String id, String name, String review) async {
+    try {
+      final response = await dio.post('${ValueManager.baseUrl}/review',
+          options: Options(headers: {'Content-Type': 'application/json'}),
+          data: {'id': id, 'name': name, 'review': review});
+
+      if (response.statusCode != null) {
+        if (!response.data['error']) {
+          final reviews = List.from(response.data['customerReviews'])
+              .map((e) => CustomerReview.fromJson(e))
+              .toList();
+
+          return Right(reviews);
         } else {
           return Left(response.statusMessage ?? '-');
         }

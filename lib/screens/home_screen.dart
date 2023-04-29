@@ -5,7 +5,7 @@ import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
 import 'package:mama_resto/widgets/restaurant_card.dart';
 
-import '../theme_manager/color_manager.dart';
+import '../widgets/custom_text_form.dart';
 import '../widgets/header_home.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,24 +52,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const HeaderHome(),
                 24.0.spaceY,
-                TextFormField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () => _restaurantCubit.fetchRestaurant(
-                          query: _searchController.text),
-                      icon: const Icon(Icons.search),
-                    ),
-                    hintText: 'Search',
-                    hintStyle: TextStyle(color: ColorManager.grey),
-                    fillColor: ColorManager.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: ColorManager.grey),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
+                CustomTextForm(
+                  searchController: _searchController,
+                  hint: 'Search',
+                  suffixIcon: IconButton(
+                    onPressed: () => _restaurantCubit.fetchRestaurant(
+                        query: _searchController.text),
+                    icon: const Icon(Icons.search),
                   ),
                 ),
                 16.0.spaceY,
