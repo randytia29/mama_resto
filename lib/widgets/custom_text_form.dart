@@ -8,13 +8,16 @@ class CustomTextForm extends StatelessWidget {
     required TextEditingController searchController,
     Widget? suffixIcon,
     String? hint,
+    String? Function(String?)? validator,
   })  : _searchController = searchController,
         _suffixIcon = suffixIcon,
-        _hint = hint;
+        _hint = hint,
+        _validator = validator;
 
   final TextEditingController _searchController;
   final Widget? _suffixIcon;
   final String? _hint;
+  final String? Function(String?)? _validator;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,7 @@ class CustomTextForm extends StatelessWidget {
           ),
         ),
       ),
+      validator: _validator,
     );
   }
 }

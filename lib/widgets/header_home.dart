@@ -27,10 +27,12 @@ class HeaderHome extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
+                maxLines: 2,
               ),
               Text(
                 'Choose your Resto for your hunger',
                 style: TextStyle(fontSize: 16),
+                maxLines: 2,
               ),
             ],
           ),

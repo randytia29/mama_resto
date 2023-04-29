@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/features/restaurant/cubit/add_review_cubit.dart';
@@ -27,6 +25,7 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  final _formKey = GlobalKey<FormState>();
   late RestaurantDetailCubit _restaurantDetailCubit;
   late ReviewCubit _reviewCubit;
   late AddReviewCubit _addReviewCubit;
@@ -88,8 +87,6 @@ class _DetailScreenState extends State<DetailScreen> {
                 if (addReviewState is AddReviewSuccess) {
                   final reviews = addReviewState.reviews;
 
-                  log(reviews.toString());
-
                   _reviewCubit.setReviews(reviews);
 
                   _nameController.clear();
@@ -150,6 +147,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        maxLines: 2,
                                       ),
                                       8.0.spaceY,
                                       Row(
@@ -178,12 +176,14 @@ class _DetailScreenState extends State<DetailScreen> {
                                             color: ColorManager.grey,
                                           ),
                                           8.0.spaceX,
-                                          Text(
-                                            restaurant.rating.toString(),
-                                            style: TextStyle(
-                                              color: ColorManager.grey,
+                                          Expanded(
+                                            child: Text(
+                                              restaurant.rating.toString(),
+                                              style: TextStyle(
+                                                color: ColorManager.grey,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
                                           )
                                         ],
                                       ),
@@ -254,11 +254,15 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       const ReviewList(),
                       24.0.spaceY,
-                      GiveReview(
-                        reviewController: _reviewController,
-                        addReviewCubit: _addReviewCubit,
-                        nameController: _nameController,
-                        id: restaurant.id ?? '',
+                      Form(
+                        key: _formKey,
+                        child: GiveReview(
+                          reviewController: _reviewController,
+                          addReviewCubit: _addReviewCubit,
+                          nameController: _nameController,
+                          id: restaurant.id ?? '',
+                          formKey: _formKey,
+                        ),
                       ),
                       24.0.spaceY
                     ],

@@ -13,15 +13,18 @@ class GiveReview extends StatelessWidget {
     required AddReviewCubit addReviewCubit,
     required TextEditingController nameController,
     required String id,
+    required GlobalKey<FormState> formKey,
   })  : _reviewController = reviewController,
         _nameController = nameController,
         _addReviewCubit = addReviewCubit,
-        _id = id;
+        _id = id,
+        _formKey = formKey;
 
   final TextEditingController _reviewController;
   final TextEditingController _nameController;
   final AddReviewCubit _addReviewCubit;
   final String _id;
+  final GlobalKey<FormState> _formKey;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +32,17 @@ class GiveReview extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child:
-              CustomTextForm(searchController: _nameController, hint: 'Nama'),
+          child: CustomTextForm(
+            searchController: _nameController,
+            hint: 'Nama',
+            validator: (value) {
+              if ((value ?? '').isEmpty) {
+                return 'Isi nama';
+              } else {
+                return null;
+              }
+            },
+          ),
         ),
         16.0.spaceY,
         Padding(
@@ -49,6 +61,13 @@ class GiveReview extends StatelessWidget {
                 ),
               ),
             ),
+            validator: (value) {
+              if ((value ?? '').isEmpty) {
+                return 'Isi review';
+              } else {
+                return null;
+              }
+            },
           ),
         ),
         16.0.spaceY,
@@ -59,8 +78,10 @@ class GiveReview extends StatelessWidget {
             }
             return ElevatedButton(
               onPressed: () {
-                _addReviewCubit.sendReview(
-                    _id, _nameController.text, _reviewController.text);
+                if ((_formKey.currentState ?? FormState()).validate()) {
+                  _addReviewCubit.sendReview(
+                      _id, _nameController.text, _reviewController.text);
+                }
               },
               child: const Text('Kirim review'),
             );
