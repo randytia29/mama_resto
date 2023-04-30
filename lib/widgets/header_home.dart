@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mama_resto/screens/settings_screen.dart';
+import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/navigation_manager.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
+import 'package:mama_resto/utils/notification_service.dart';
 
 import '../features/restaurant/cubit/favorite_cubit.dart';
 import '../screens/favorite_screen.dart';
@@ -43,13 +46,22 @@ class HeaderHome extends StatelessWidget {
             final restaurants = favoriteState.restaurants;
 
             return IconButton(
-              onPressed: () => context.toScreen(FavoriteScreen.routeName),
+              onPressed: () async {
+                final ssda = sl<NotificationService>();
+
+                await ssda.showNotification();
+              },
+              // onPressed: () => context.toScreen(FavoriteScreen.routeName),
               icon: Badge(
                 isLabelVisible: restaurants.isNotEmpty,
                 child: const Icon(Icons.favorite_border),
               ),
             );
           },
+        ),
+        IconButton(
+          onPressed: () => context.toScreen(SettingScreen.routeName),
+          icon: const Icon(Icons.settings),
         )
       ],
     );

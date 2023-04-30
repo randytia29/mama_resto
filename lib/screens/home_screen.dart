@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/features/restaurant/cubit/restaurant_cubit.dart';
 import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
+import 'package:mama_resto/utils/notification_service.dart';
 import 'package:mama_resto/widgets/restaurant_card.dart';
 
 import '../widgets/custom_text_form.dart';
@@ -26,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _searchController = TextEditingController();
     _restaurantCubit = sl<RestaurantCubit>();
+
+    sl<NotificationService>().requestPermission();
   }
 
   @override
