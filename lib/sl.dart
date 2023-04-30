@@ -26,7 +26,8 @@ Future<void> init(
   sl.registerFactory(() => RestaurantDetailCubit(restaurantRepository: sl()));
   sl.registerFactory(() => AddReviewCubit(restaurantRepository: sl()));
   sl.registerFactory(() => ReviewCubit());
-  sl.registerLazySingleton(() => NotificationCubit());
+  sl.registerLazySingleton(() =>
+      NotificationCubit(notificationService: sl(), restaurantRepository: sl()));
 
   // Repository
   sl.registerLazySingleton<RestaurantRepository>(

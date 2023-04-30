@@ -20,7 +20,9 @@ class SettingScreen extends StatelessWidget {
           return SwitchListTile.adaptive(
             value: enable,
             onChanged: (value) {
-              context.read<NotificationCubit>().changeEnableNotification(value);
+              context
+                  .read<NotificationCubit>()
+                  .changeEnableNotification(value, 1);
             },
             title: const Text('Restaurant Notification'),
             subtitle: const Text('Enable notification'),

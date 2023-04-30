@@ -49,7 +49,7 @@ class HeaderHome extends StatelessWidget {
               onPressed: () async {
                 final ssda = sl<NotificationService>();
 
-                await ssda.showNotification();
+                await ssda.scheduleNotification(1, 'title', 'body');
               },
               // onPressed: () => context.toScreen(FavoriteScreen.routeName),
               icon: Badge(
