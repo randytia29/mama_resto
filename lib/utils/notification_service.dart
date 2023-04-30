@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 import 'navigation.dart';
 
@@ -13,26 +13,30 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  static Future<void> scheduleNotification(
-      int id, String? title, String? body) async {
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-        id, title, body, _nextInstanceOfTenAM(), _notificationDetail(),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time);
-  }
+  static Future<void> notificationInitialize(
+      void Function(NotificationResponse)?
+          onDidReceiveBackgroundNotificationResponse) async {
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('logo_launcher');
 
-  static Future<void> cancelNotification(int id) async {
-    await _flutterLocalNotificationsPlugin.cancel(id);
-  }
+    const initializationSettingsIOS = DarwinInitializationSettings();
 
-  static NotificationDetails _notificationDetail() {
-    return const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'channelId',
-        'channelName',
-      ),
+    const initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (notificationResponse) {
+        final payload = notificationResponse.payload;
+
+        if (payload != null) {
+          log('notification payload: $payload');
+        }
+
+        selectNotificationSubject.add(payload ?? 'empty payload');
+      },
+      onDidReceiveBackgroundNotificationResponse:
+          onDidReceiveBackgroundNotificationResponse,
     );
   }
 
@@ -63,16 +67,6 @@ class NotificationService {
             AndroidFlutterLocalNotificationsPlugin>();
 
     await androidImplementation?.requestPermission();
-  }
-
-  static tz.TZDateTime _nextInstanceOfTenAM() {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, 16);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
   }
 
   static void configureSelectNotificationSubject(String route) =>

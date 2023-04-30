@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mama_resto/features/restaurant/cubit/add_review_cubit.dart';
 import 'package:mama_resto/features/restaurant/cubit/favorite_cubit.dart';
@@ -13,8 +12,7 @@ import 'package:mama_resto/features/restaurant/domain/repositories/restaurant_re
 
 final sl = GetIt.instance;
 
-Future<void> init(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+Future<void> init() async {
   //! Features
   // Bloc
 
