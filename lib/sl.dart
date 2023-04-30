@@ -10,7 +10,6 @@ import 'package:mama_resto/features/restaurant/cubit/review_cubit.dart';
 import 'package:mama_resto/features/restaurant/cubit/search_restaurant_cubit.dart';
 import 'package:mama_resto/features/restaurant/data/repositories/restaurant_repository_impl.dart';
 import 'package:mama_resto/features/restaurant/domain/repositories/restaurant_repository.dart';
-import 'package:mama_resto/utils/notification_service.dart';
 
 final sl = GetIt.instance;
 
@@ -26,8 +25,7 @@ Future<void> init(
   sl.registerFactory(() => RestaurantDetailCubit(restaurantRepository: sl()));
   sl.registerFactory(() => AddReviewCubit(restaurantRepository: sl()));
   sl.registerFactory(() => ReviewCubit());
-  sl.registerLazySingleton(() =>
-      NotificationCubit(notificationService: sl(), restaurantRepository: sl()));
+  sl.registerLazySingleton(() => NotificationCubit());
 
   // Repository
   sl.registerLazySingleton<RestaurantRepository>(
@@ -35,9 +33,4 @@ Future<void> init(
 
   //! External
   sl.registerLazySingleton(() => Dio());
-  sl.registerLazySingleton(
-    () => NotificationService(
-      flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
-    ),
-  );
 }

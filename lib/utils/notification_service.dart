@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'navigation.dart';
+
+final selectNotificationSubject = BehaviorSubject<String>();
+
 class NotificationService {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  static final FlutterLocalNotificationsPlugin
+      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  NotificationService({required this.flutterLocalNotificationsPlugin});
-
-  Future<void> scheduleNotification(int id, String? title, String? body) async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
+  static Future<void> scheduleNotification(
+      int id, String? title, String? body) async {
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
         id, title, body, _nextInstanceOfTenAM(), _notificationDetail(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
@@ -15,11 +23,11 @@ class NotificationService {
         matchDateTimeComponents: DateTimeComponents.time);
   }
 
-  Future<void> cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
+  static Future<void> cancelNotification(int id) async {
+    await _flutterLocalNotificationsPlugin.cancel(id);
   }
 
-  NotificationDetails _notificationDetail() {
+  static NotificationDetails _notificationDetail() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         'channelId',
@@ -28,31 +36,36 @@ class NotificationService {
     );
   }
 
-  Future<void> showNotification() async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('your channel id', 'your channel name',
-            channelDescription: 'your channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
+  static Future<void> showNotification(int id, Restaurant restaurant) async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      channelDescription: 'channelDescription',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      styleInformation: DefaultStyleInformation(true, true),
+    );
 
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
-        1, 'plain title', 'plain body', notificationDetails,
-        payload: 'item x');
+    await _flutterLocalNotificationsPlugin.show(0, restaurant.name,
+        'Recommendation restaurant for you', platformChannelSpecifics,
+        payload: json.encode(restaurant.toJson()));
   }
 
-  Future<void> requestPermission() async {
+  static Future<void> requestPermission() async {
     final androidImplementation =
-        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
 
     await androidImplementation?.requestPermission();
   }
 
-  tz.TZDateTime _nextInstanceOfTenAM() {
+  static tz.TZDateTime _nextInstanceOfTenAM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, 16);
@@ -61,4 +74,12 @@ class NotificationService {
     }
     return scheduledDate;
   }
+
+  static void configureSelectNotificationSubject(String route) =>
+      selectNotificationSubject.stream.listen(
+        (String payload) async {
+          var data = Restaurant.fromJson(json.decode(payload));
+          Navigation.intentWithData(route, data);
+        },
+      );
 }

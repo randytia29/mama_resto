@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/features/restaurant/cubit/restaurant_cubit.dart';
+import 'package:mama_resto/screens/detail_screen.dart';
 import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
+import 'package:mama_resto/utils/background_service.dart';
 import 'package:mama_resto/utils/notification_service.dart';
 import 'package:mama_resto/widgets/restaurant_card.dart';
 
@@ -19,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final BackgroundService _service = BackgroundService();
   late TextEditingController _searchController;
   late RestaurantCubit _restaurantCubit;
 
@@ -28,13 +31,19 @@ class _HomeScreenState extends State<HomeScreen> {
     _searchController = TextEditingController();
     _restaurantCubit = sl<RestaurantCubit>();
 
-    sl<NotificationService>().requestPermission();
+    NotificationService.requestPermission();
+    NotificationService.configureSelectNotificationSubject(
+        DetailScreen.routeName);
+
+    port.listen((message) async => await _service.someTask());
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     _restaurantCubit.close();
+
+    selectNotificationSubject.close();
     super.dispose();
   }
 

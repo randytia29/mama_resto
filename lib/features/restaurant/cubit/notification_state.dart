@@ -1,7 +1,9 @@
 part of 'notification_cubit.dart';
 
 class NotificationState extends Equatable {
-  const NotificationState({required this.enable});
+  const NotificationState({
+    required this.enable,
+  });
 
   final bool enable;
 

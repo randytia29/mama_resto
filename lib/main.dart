@@ -4,11 +4,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:mama_resto/utils/background_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 import 'app.dart';
 import 'sl.dart' as sl;
+import 'utils/notification_service.dart';
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -37,10 +40,13 @@ Future<void> notificationInitialize() async {
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (notificationResponse) {
-      if (notificationResponse.payload != null) {
-        log(notificationResponse.payload ?? '-');
+      final payload = notificationResponse.payload;
+
+      if (payload != null) {
+        log('notification payload: $payload');
       }
-      log('test local');
+
+      selectNotificationSubject.add(payload ?? 'empty payload');
     },
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
@@ -54,8 +60,12 @@ Future<void> main() async {
       await HydratedStorage.build(storageDirectory: appDocumentDirectory);
 
   await notificationInitialize();
-
   tz.initializeTimeZones();
+
+  final BackgroundService service = BackgroundService();
+
+  service.initializeIsolate();
+  await AndroidAlarmManager.initialize();
 
   await sl.init(flutterLocalNotificationsPlugin);
 
