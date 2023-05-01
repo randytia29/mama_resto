@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mama_resto/utils/background_service.dart';
+import 'package:mama_resto/utils/date_time_helper.dart';
 
 import '../features/restaurant/cubit/notification_cubit.dart';
 
@@ -23,23 +22,11 @@ class SettingScreen extends StatelessWidget {
           final enable = notificationState.enable;
 
           if (enable) {
-            AndroidAlarmManager.oneShot(
-                const Duration(seconds: 7), 1, BackgroundService.callback,
-                exact: true, wakeup: true);
-
-            // final result =
-            //     await sl<RestaurantRepository>().getListRestaurant('');
-
-            // result.fold((l) => null, (r) async {
-            //   final randomIndex = Random().nextInt(r.length);
-            //   final restaurant = r[randomIndex];
-
-            //   await sl<NotificationService>().showNotification(1, restaurant);
-            // });
-
-            log('halo');
+            await AndroidAlarmManager.periodic(
+                const Duration(days: 1), 1, BackgroundService.callback,
+                startAt: DateTimeHelper.format(), exact: true, wakeup: true);
           } else {
-            log('message');
+            await AndroidAlarmManager.cancel(1);
           }
         },
         child: BlocBuilder<NotificationCubit, NotificationState>(

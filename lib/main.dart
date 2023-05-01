@@ -12,9 +12,6 @@ import 'app.dart';
 import 'sl.dart' as sl;
 import 'utils/notification_service.dart';
 
-final StreamController<String?> selectNotificationStream =
-    StreamController<String?>.broadcast();
-
 void notificationTapBackground(NotificationResponse notificationResponse) {
   log('test background');
   log('notification(${notificationResponse.id}) action tapped: '
