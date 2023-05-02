@@ -23,9 +23,9 @@ Future<void> init() async {
   // Restaurant
   sl.registerLazySingleton(() => FavoriteCubit());
   sl.registerFactory(() => SearchRestaurantCubit());
-  sl.registerFactory(() => RestaurantCubit(restaurantRepository: sl()));
-  sl.registerFactory(() => RestaurantDetailCubit(restaurantRepository: sl()));
-  sl.registerFactory(() => AddReviewCubit(restaurantRepository: sl()));
+  sl.registerFactory(() => RestaurantCubit(listRestaurant: sl()));
+  sl.registerFactory(() => RestaurantDetailCubit(detailRestaurant: sl()));
+  sl.registerFactory(() => AddReviewCubit(review: sl()));
   sl.registerFactory(() => ReviewCubit());
   sl.registerLazySingleton(() => NotificationCubit());
 
