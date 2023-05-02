@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
-          title: 'Donor Kuy',
+          title: 'MaMa Resto',
           theme: getApplicationThemeData(),
           routes: {
             SplashScreen.routeName: (context) => const SplashScreen(),
