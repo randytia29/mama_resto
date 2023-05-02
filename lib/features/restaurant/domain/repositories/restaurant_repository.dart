@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/customer_review.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
+
+import '../../data/models/customer_review.dart';
+import '../../data/models/restaurant.dart';
 
 abstract class RestaurantRepository {
   Future<Either<String, List<Restaurant>>> getListRestaurant(String query);

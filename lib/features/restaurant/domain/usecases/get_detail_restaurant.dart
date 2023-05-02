@@ -1,24 +1,18 @@
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:mama_resto/core/usecases/usecase.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
+import 'package:mama_resto/features/restaurant/domain/entities/get_detail_restaurant_params.dart';
 import 'package:mama_resto/features/restaurant/domain/repositories/restaurant_repository.dart';
 
-class GetDetailRestaurant implements Usecase<Restaurant, Params> {
+import '../../data/models/restaurant.dart';
+
+class GetDetailRestaurant
+    implements Usecase<Restaurant, GetDetailRestaurantParams> {
   final RestaurantRepository repository;
 
   GetDetailRestaurant(this.repository);
 
   @override
-  Future<Either<String, Restaurant>> call(Params params) async =>
+  Future<Either<String, Restaurant>> call(
+          GetDetailRestaurantParams params) async =>
       await repository.getDetailRestaurant(params.id);
-}
-
-class Params extends Equatable {
-  final String id;
-
-  const Params({required this.id});
-
-  @override
-  List<Object?> get props => [id];
 }

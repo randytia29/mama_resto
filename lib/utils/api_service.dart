@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../features/restaurant/domain/entities/restaurant.dart';
+import '../features/restaurant/data/models/restaurant.dart';
 import '../theme_manager/value_manager.dart';
 
 class ApiService {

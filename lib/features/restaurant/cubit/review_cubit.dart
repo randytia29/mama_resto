@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/customer_review.dart';
+
+import '../data/models/customer_review.dart';
 
 part 'review_state.dart';
 

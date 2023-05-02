@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
 import 'package:mama_resto/features/restaurant/domain/repositories/restaurant_repository.dart';
+
+import '../data/models/restaurant.dart';
 
 part 'restaurant_state.dart';
 
