@@ -1,5 +1,6 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/restaurant.dart';
+
+import '../data/models/restaurant.dart';
 
 part 'favorite_state.dart';
 

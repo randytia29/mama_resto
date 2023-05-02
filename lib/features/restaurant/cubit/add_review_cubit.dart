@@ -1,23 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mama_resto/features/restaurant/domain/entities/customer_review.dart';
+import 'package:mama_resto/features/restaurant/domain/entities/add_review_params.dart';
+import 'package:mama_resto/features/restaurant/domain/usecases/add_review.dart';
 
-import '../domain/repositories/restaurant_repository.dart';
+import '../data/models/customer_review.dart';
 
 part 'add_review_state.dart';
 
 class AddReviewCubit extends Cubit<AddReviewState> {
-  final RestaurantRepository repository;
+  final AddReview addReview;
 
-  AddReviewCubit({
-    required RestaurantRepository restaurantRepository,
-  })  : repository = restaurantRepository,
+  AddReviewCubit({required AddReview review})
+      : addReview = review,
         super(AddReviewInitial());
 
   void sendReview(String id, String name, String review) async {
     emit(AddReviewLoading());
 
-    final result = await repository.addReview(id, name, review);
+    final result =
+        await addReview(AddReviewParams(id: id, name: name, review: review));
 
     result.fold((l) => emit(AddReviewFailed(message: l)),
         (r) => emit(AddReviewSuccess(reviews: r)));

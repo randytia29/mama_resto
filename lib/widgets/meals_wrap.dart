@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../features/restaurant/domain/entities/category.dart';
+import '../features/restaurant/data/models/category.dart';
 
 class MealsWrap extends StatelessWidget {
   const MealsWrap({
