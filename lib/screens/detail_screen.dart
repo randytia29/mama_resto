@@ -6,6 +6,7 @@ import 'package:mama_resto/features/restaurant/cubit/review_cubit.dart';
 import 'package:mama_resto/sl.dart';
 import 'package:mama_resto/theme_manager/space_manager.dart';
 import 'package:mama_resto/theme_manager/value_manager.dart';
+import 'package:readmore/readmore.dart';
 
 import '../features/restaurant/cubit/favorite_cubit.dart';
 import '../theme_manager/color_manager.dart';
@@ -228,10 +229,14 @@ class _DetailScreenState extends State<DetailScreen> {
                               ],
                             ),
                             24.0.spaceY,
-                            Text(
+                            ReadMoreText(
                               restaurant.description ?? '-',
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
+                              trimLines: 5,
+                              trimMode: TrimMode.Line,
+                              trimCollapsedText: ' Read More',
+                              trimExpandedText: ' Read Less',
+                              moreStyle: TextStyle(color: ColorManager.primary),
+                              lessStyle: TextStyle(color: ColorManager.primary),
                             ),
                             24.0.spaceY,
                             MealsWrap(
